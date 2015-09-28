@@ -7,7 +7,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.util.*;
+import java.util.logging.Level;
 import org.geotools.data.*;
 import org.geotools.data.shapefile.ShapefileAttributeReader;
 import org.geotools.data.shapefile.ShapefileDataStore;
@@ -34,13 +36,14 @@ public class DbaseShapefileDataStore extends ShapefileDataStore {
     private Set<String> shapefileAttributeNames;
     private Set<String> joinedDBaseAttributeNames;
     private Map<Object, Integer> fieldIndexMap;
+	private static final Charset UTF8 = Charset.forName("UTF-8");
 
     public DbaseShapefileDataStore(URI namespaceURI, URL dbaseFileURL, URL shapefileURL, String shapefileJoinAttributeName) throws MalformedURLException, IOException {
-        super(shapefileURL, namespaceURI, true, true, ShapefileDataStore.DEFAULT_STRING_CHARSET);
+        super(shapefileURL, namespaceURI, true, true, UTF8);
         
         this.dbaseFileURL = dbaseFileURL;
         
-        this.shapefileJoinAttributeName = shapefileJoinAttributeName;
+        this.shapefileJoinAttributeName = shapefileJoinAttributeName;    
         
         // NOTE: if this method is removed from constructor it should be synchronized...
         createDbaseReader();

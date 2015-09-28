@@ -7,7 +7,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.util.*;
+import java.util.logging.Level;
 import org.geotools.data.*;
 import org.geotools.data.shapefile.ShapefileAttributeReader;
 import org.geotools.data.shapefile.ShapefileDataStore;
@@ -35,11 +37,12 @@ public class DbaseDirectoryShapefileDataStore extends ShapefileDataStore {
 
     private Set<String> shapefileAttributeNames;
     private Set<String> joinedDBaseAttributeNames;
+	private static final Charset UTF8 = Charset.forName("UTF-8");
     
     private Map<File, Map<Object, Integer>> fileFieldIndexMap = new HashMap<File, Map<Object, Integer>>();
     
     public DbaseDirectoryShapefileDataStore(URI namespaceURI, URL dbaseDirectoryURL, URL shapefileURL, String shapefileJoinAttributeName) throws MalformedURLException, IOException {
-        super(shapefileURL, namespaceURI, true, true, ShapefileDataStore.DEFAULT_STRING_CHARSET);
+        super(shapefileURL, namespaceURI, true, true, UTF8);
         
         this.joinedDBaseDirectoryURL = dbaseDirectoryURL;
         
@@ -59,6 +62,7 @@ public class DbaseDirectoryShapefileDataStore extends ShapefileDataStore {
     private List<FieldIndexedDbaseFileReader> createDbaseReaderList() throws IOException {
         List<FieldIndexedDbaseFileReader> dbaseReaderList = new ArrayList<FieldIndexedDbaseFileReader>(joinableDbaseFiles.size());
         for (File dbaseFile : joinableDbaseFiles) {
+			LOGGER.log(Level.FINER, "DbaseDirectoryShapefileDataStore reading {0}", dbaseFile.getPath());
             FileChannel dbaseFileChannel = (new FileInputStream(dbaseFile)).getChannel();
             FieldIndexedDbaseFileReader dbaseReader = new FieldIndexedDbaseFileReader(dbaseFileChannel);
             Map<Object, Integer> fieldIndexMap = fileFieldIndexMap.get(dbaseFile);

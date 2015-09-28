@@ -128,11 +128,13 @@ public class DbaseShapefileDataStoreFactory implements DataStoreFactorySpi {
     
     @Override
     public DataStore createDataStore(Map<String, Serializable> params) throws IOException {
-        return new DbaseShapefileDataStore(
+        DbaseShapefileDataStore ds =  new DbaseShapefileDataStore(
                 (URI) NAMESPACE.lookUp(params),
                 (URL) DBASE.lookUp(params),
                 (URL) SHAPEFILE.lookUp(params),
                 (String) DBASE_JOIN_FIELD.lookUp(params));
+		
+		return ds;
     }
 
     @Override
