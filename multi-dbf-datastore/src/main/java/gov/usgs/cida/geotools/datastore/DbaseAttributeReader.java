@@ -17,7 +17,7 @@ public class DbaseAttributeReader implements AttributeReader {
     private final FieldIndexedDbaseFileReader dbaseReader;
     private final int attributeCount;
     
-    private int[] dbaseReaderFieldIndices;
+    private final int[] dbaseReaderFieldIndices;
     private FieldIndexedDbaseFileReader.Row dbaseReaderRow;
 
     DbaseAttributeReader(FieldIndexedDbaseFileReader dbaseReader, SimpleFeatureType featureType) throws IOException {
@@ -28,8 +28,7 @@ public class DbaseAttributeReader implements AttributeReader {
         dbaseReaderFieldIndices = new int[attributeCount];
         for (int attributeIndex = 0; attributeIndex < attributeCount; ++attributeIndex) {
             Object o = featureType.getDescriptor(attributeIndex).getUserData().get(DbaseShapefileDataStore.KEY_FIELD_INDEX);
-            dbaseReaderFieldIndices[attributeIndex] = o instanceof Integer ?
-                    ((Integer)o).intValue() : -1;
+            dbaseReaderFieldIndices[attributeIndex] = o instanceof Integer ? (Integer) o : -1;
         }
     }
 

@@ -35,12 +35,12 @@ public class DbaseShapefileDataStoreFactory implements DataStoreFactorySpi {
     
     @Override
     public String getDisplayName() {
-        return "Dbase Shapefile Joining Data Store";
+        return "Dbase Shapefile Joining Data Store ";
     }
 
     @Override
     public String getDescription() {
-        return "Allows joining of a Dbase file with a Shapefile";
+        return "Allows joining of a Dbase file with a Shapefile ";
     }
     
     /**
@@ -68,6 +68,7 @@ public class DbaseShapefileDataStoreFactory implements DataStoreFactorySpi {
                 new KVP(Param.EXT, "shp"));
     public static final Param DBASE_JOIN_FIELD =
             new Param("dbase_field", String.class, "DBase Joining Field", true);
+	
     @Override
     public Param[] getParametersInfo() {
         return new Param[] {
@@ -78,7 +79,7 @@ public class DbaseShapefileDataStoreFactory implements DataStoreFactorySpi {
         };
     }
     
-        @Override
+    @Override
     public boolean canProcess(Map<String, Serializable> params) {
         try {
             URL dbaseAsURL = (URL)DBASE.lookUp(params);
@@ -128,11 +129,13 @@ public class DbaseShapefileDataStoreFactory implements DataStoreFactorySpi {
     
     @Override
     public DataStore createDataStore(Map<String, Serializable> params) throws IOException {
-        return new DbaseShapefileDataStore(
+        DbaseShapefileDataStore ds =  new DbaseShapefileDataStore(
                 (URI) NAMESPACE.lookUp(params),
                 (URL) DBASE.lookUp(params),
                 (URL) SHAPEFILE.lookUp(params),
                 (String) DBASE_JOIN_FIELD.lookUp(params));
+		
+		return ds;
     }
 
     @Override

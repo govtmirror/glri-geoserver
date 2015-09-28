@@ -28,7 +28,7 @@ public class FieldIndexedDbaseFileReader extends DbaseFileReader {
 	 * Index of the join column values to the unique row they occur on.
 	 * The rows are ONE based.
 	 */
-	Map<Object, Integer> indexMap = new HashMap<Object, Integer>();
+	Map<Object, Integer> indexMap = new HashMap<>();
     
     public FieldIndexedDbaseFileReader(FileChannel fileChannel) throws IOException {
         super(fileChannel, true, ShapefileDataStore.DEFAULT_STRING_CHARSET);
@@ -92,9 +92,7 @@ public class FieldIndexedDbaseFileReader extends DbaseFileReader {
             if (this.currentOffset <= newPosition
                     && this.currentOffset + buffer.limit() >= newPosition) {
                 buffer.position((int) (newPosition - this.currentOffset));
-                //System.out.println("Hit");
             } else {
-                //System.out.println("Jump");
                 FileChannel fc = (FileChannel) this.channel;
                 fc.position(newPosition);
                 this.currentOffset = newPosition;

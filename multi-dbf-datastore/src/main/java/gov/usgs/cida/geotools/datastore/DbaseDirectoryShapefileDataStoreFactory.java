@@ -27,6 +27,7 @@ public class DbaseDirectoryShapefileDataStoreFactory implements DataStoreFactory
     
     /**
      * No implementation hints are provided at this time.
+	 * @return 
      */
     @Override
     public Map<Key, ?> getImplementationHints() {
@@ -35,12 +36,12 @@ public class DbaseDirectoryShapefileDataStoreFactory implements DataStoreFactory
     
     @Override
     public String getDisplayName() {
-        return "Dbase Directory Shapefile Joining Data Store";
+        return "Dbase Directory Shapefile Joining Data Store ";
     }
 
     @Override
     public String getDescription() {
-        return "Allows joining of a Dbase files in a directory with a Shapefile";
+        return "Allows joining of a Dbase files in a directory with a Shapefile ";
     }
     
     /**
@@ -83,7 +84,7 @@ public class DbaseDirectoryShapefileDataStoreFactory implements DataStoreFactory
         try {
             URL dbaseAsURL = (URL)DBASE.lookUp(params);
             if (dbaseAsURL != null) {
-                File dbaseAsFile = null;
+                File dbaseAsFile;
                 try {
                     dbaseAsFile = new File(dbaseAsURL.toURI());
                     if (!dbaseAsFile.isDirectory()) {
@@ -101,7 +102,7 @@ public class DbaseDirectoryShapefileDataStoreFactory implements DataStoreFactory
             }
             URL shapefileAsURL = (URL)SHAPEFILE.lookUp(params);
             if (shapefileAsURL != null) {
-                File shapeFileAsFile = null;
+                File shapeFileAsFile;
                 try {
                     shapeFileAsFile = new File(shapefileAsURL.toURI());
                 } catch (Exception ex) {

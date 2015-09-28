@@ -7,8 +7,19 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.channels.FileChannel;
-import java.util.*;
-import org.geotools.data.*;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import org.geotools.data.DataUtilities;
+import org.geotools.data.DefaultFeatureReader;
+import org.geotools.data.FeatureReader;
+import org.geotools.data.Query;
 import org.geotools.data.shapefile.ShapefileAttributeReader;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
@@ -34,13 +45,14 @@ public class DbaseShapefileDataStore extends ShapefileDataStore {
     private Set<String> shapefileAttributeNames;
     private Set<String> joinedDBaseAttributeNames;
     private Map<Object, Integer> fieldIndexMap;
+	private static final Charset UTF8 = Charset.forName("UTF-8");
 
     public DbaseShapefileDataStore(URI namespaceURI, URL dbaseFileURL, URL shapefileURL, String shapefileJoinAttributeName) throws MalformedURLException, IOException {
-        super(shapefileURL, namespaceURI, true, true, ShapefileDataStore.DEFAULT_STRING_CHARSET);
+        super(shapefileURL, namespaceURI, true, true, UTF8);
         
         this.dbaseFileURL = dbaseFileURL;
         
-        this.shapefileJoinAttributeName = shapefileJoinAttributeName;
+        this.shapefileJoinAttributeName = shapefileJoinAttributeName;    
         
         // NOTE: if this method is removed from constructor it should be synchronized...
         createDbaseReader();
@@ -65,10 +77,10 @@ public class DbaseShapefileDataStore extends ShapefileDataStore {
     protected List<AttributeDescriptor> readAttributes() throws IOException {
         List<AttributeDescriptor> shapefileAttributeDescriptors = super.readAttributes();
         
-        shapefileAttributeNames = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-        for (AttributeDescriptor attributeDescriptor : shapefileAttributeDescriptors) {
-            shapefileAttributeNames.add(attributeDescriptor.getLocalName());
-        }
+        shapefileAttributeNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+		shapefileAttributeDescriptors.stream().forEach((attributeDescriptor) -> {
+			shapefileAttributeNames.add(attributeDescriptor.getLocalName());
+		});
         
         List<AttributeDescriptor> dbaseFileAttributeDescriptors;
         
@@ -78,7 +90,7 @@ public class DbaseShapefileDataStore extends ShapefileDataStore {
         
             DbaseFileHeader dbaseFileHeader = dbaseReader.getHeader();
             int dbaseFieldCount = dbaseFileHeader.getNumFields();
-            dbaseFileAttributeDescriptors = new ArrayList<AttributeDescriptor>(dbaseFieldCount - 1);
+            dbaseFileAttributeDescriptors = new ArrayList<>(dbaseFieldCount - 1);
 
             AttributeTypeBuilder atBuilder = new AttributeTypeBuilder();
 
@@ -97,12 +109,12 @@ public class DbaseShapefileDataStore extends ShapefileDataStore {
             }
         }
             
-        joinedDBaseAttributeNames = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-        for (AttributeDescriptor attributeDescriptor : dbaseFileAttributeDescriptors) {
-            joinedDBaseAttributeNames.add(attributeDescriptor.getLocalName());
-        }
+        joinedDBaseAttributeNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+		dbaseFileAttributeDescriptors.stream().forEach((attributeDescriptor) -> {
+			joinedDBaseAttributeNames.add(attributeDescriptor.getLocalName());
+		});
             
-        List<AttributeDescriptor> attributeDescriptors = new ArrayList<AttributeDescriptor>(
+        List<AttributeDescriptor> attributeDescriptors = new ArrayList<>(
                 shapefileAttributeDescriptors.size() +
                 dbaseFileAttributeDescriptors.size());
         attributeDescriptors.addAll(shapefileAttributeDescriptors);

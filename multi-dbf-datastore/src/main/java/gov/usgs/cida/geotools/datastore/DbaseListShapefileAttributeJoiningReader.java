@@ -20,9 +20,9 @@ public class DbaseListShapefileAttributeJoiningReader  extends ShapefileAttribut
     private final int shapefileJoinAttributeIndex;
     private final List<FieldIndexedDbaseFileReader> dbaseReaderList;
     
-    private int[] dbaseReaderIndices;
-    private int[] dbaseReaderFieldIndices;
-    private FieldIndexedDbaseFileReader.Row[] dbaseReaderRows;
+    private final int[] dbaseReaderIndices;
+    private final int[] dbaseReaderFieldIndices;
+    private final FieldIndexedDbaseFileReader.Row[] dbaseReaderRows;
     
     public DbaseListShapefileAttributeJoiningReader(ShapefileAttributeReader delegate, List<FieldIndexedDbaseFileReader> dbaseReaderList, int shapefileJoinAttributeIndex) throws IOException {
         super(hack(delegate), null, null); // lame duck
@@ -39,10 +39,10 @@ public class DbaseListShapefileAttributeJoiningReader  extends ShapefileAttribut
             AttributeDescriptor attributeDescriptor = getAttributeType(attributeIndex);
             Object dbaseReaderIndexObject = attributeDescriptor.getUserData().get(DbaseDirectoryShapefileDataStore.KEY_READER_INDEX);
             if (dbaseReaderIndexObject instanceof Integer) {
-                dbaseReaderIndices[attributeIndex] = ((Integer)dbaseReaderIndexObject).intValue();
+                dbaseReaderIndices[attributeIndex] = (Integer)dbaseReaderIndexObject;
                 Object dbaseReaderFieldIndexObject = attributeDescriptor.getUserData().get(DbaseDirectoryShapefileDataStore.KEY_FIELD_INDEX);
                 if (dbaseReaderFieldIndexObject instanceof Integer) {
-                    dbaseReaderFieldIndices[attributeIndex] = ((Integer)dbaseReaderFieldIndexObject).intValue();
+                    dbaseReaderFieldIndices[attributeIndex] = (Integer)dbaseReaderFieldIndexObject;
                 } else {
                     dbaseReaderFieldIndices[attributeIndex] = -1;
                 }
@@ -119,7 +119,7 @@ public class DbaseListShapefileAttributeJoiningReader  extends ShapefileAttribut
 
     private static List<AttributeDescriptor> hack(ShapefileAttributeReader delegate) {
         int attributeCount = delegate.getAttributeCount();
-        List<AttributeDescriptor> descriptors = new ArrayList<AttributeDescriptor>(delegate.getAttributeCount());
+        List<AttributeDescriptor> descriptors = new ArrayList<>(delegate.getAttributeCount());
         for (int attributeIndex = 0; attributeIndex < attributeCount; ++attributeIndex) {
             descriptors.add(delegate.getAttributeType(attributeIndex));
         }
