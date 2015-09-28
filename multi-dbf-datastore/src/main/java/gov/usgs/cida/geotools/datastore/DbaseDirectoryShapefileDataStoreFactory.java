@@ -36,12 +36,12 @@ public class DbaseDirectoryShapefileDataStoreFactory implements DataStoreFactory
     
     @Override
     public String getDisplayName() {
-        return "Dbase Directory Shapefile Joining Data Store TEST TEST ";
+        return "Dbase Directory Shapefile Joining Data Store ";
     }
 
     @Override
     public String getDescription() {
-        return "Allows joining of a Dbase files in a directory with a Shapefile TEST TEST ";
+        return "Allows joining of a Dbase files in a directory with a Shapefile ";
     }
     
     /**

@@ -35,12 +35,12 @@ public class DbaseShapefileDataStoreFactory implements DataStoreFactorySpi {
     
     @Override
     public String getDisplayName() {
-        return "Dbase Shapefile Joining Data Store TEST ";
+        return "Dbase Shapefile Joining Data Store ";
     }
 
     @Override
     public String getDescription() {
-        return "Allows joining of a Dbase file with a Shapefile TEST";
+        return "Allows joining of a Dbase file with a Shapefile ";
     }
     
     /**
