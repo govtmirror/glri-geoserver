@@ -10,7 +10,6 @@ import org.geotools.data.AttributeReader;
 import org.geotools.data.shapefile.dbf.FieldIndexedDbaseFileReader;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
-import org.opengis.feature.type.AttributeType;
 
 /**
  *
@@ -22,12 +21,12 @@ public class DbaseListAttributeReader implements AttributeReader {
     private final List<FieldIndexedDbaseFileReader> dbaseReaderList;
     private final int attributeCount;
     
-    private int[] dbaseReaderIndices;
-    private int[] dbaseReaderFieldIndices;
-    private FieldIndexedDbaseFileReader.Row[] dbaseReaderRows;
+    private final int[] dbaseReaderIndices;
+    private final int[] dbaseReaderFieldIndices;
+    private final FieldIndexedDbaseFileReader.Row[] dbaseReaderRows;
     
-    private Set<Object> indexedValueSet;
-    private Iterator<Object> indexedValueIterator;
+    private final Set<Object> indexedValueSet;
+    private final Iterator<Object> indexedValueIterator;
 
     DbaseListAttributeReader(List<FieldIndexedDbaseFileReader> dbaseReaderList, SimpleFeatureType featureType) throws IOException {
         this.featureType = featureType;
@@ -42,10 +41,10 @@ public class DbaseListAttributeReader implements AttributeReader {
             AttributeDescriptor attributeDescriptor = featureType.getDescriptor(attributeIndex);
             Object dbaseReaderIndexObject = attributeDescriptor.getUserData().get(DbaseDirectoryShapefileDataStore.KEY_READER_INDEX);
             if (dbaseReaderIndexObject instanceof Integer) {
-                dbaseReaderIndices[attributeIndex] = ((Integer)dbaseReaderIndexObject).intValue();
+                dbaseReaderIndices[attributeIndex] = (Integer)dbaseReaderIndexObject;
                 Object dbaseReaderFieldIndexObject = attributeDescriptor.getUserData().get(DbaseDirectoryShapefileDataStore.KEY_FIELD_INDEX);
                 if (dbaseReaderFieldIndexObject instanceof Integer) {
-                    dbaseReaderFieldIndices[attributeIndex] = ((Integer)dbaseReaderFieldIndexObject).intValue();
+                    dbaseReaderFieldIndices[attributeIndex] = (Integer)dbaseReaderFieldIndexObject;
                 } else {
                     dbaseReaderFieldIndices[attributeIndex] = -1;
                 }
@@ -55,10 +54,10 @@ public class DbaseListAttributeReader implements AttributeReader {
             }
         }
         
-        indexedValueSet = new TreeSet<Object>();
-        for (FieldIndexedDbaseFileReader dbaseReader : dbaseReaderList) {
-            indexedValueSet.addAll(dbaseReader.getFieldIndex().keySet());
-        }
+        indexedValueSet = new TreeSet<>();
+		dbaseReaderList.stream().forEach((dbaseReader) -> {
+			indexedValueSet.addAll(dbaseReader.getFieldIndex().keySet());
+		});
         indexedValueIterator = indexedValueSet.iterator();
     }
 
@@ -74,11 +73,9 @@ public class DbaseListAttributeReader implements AttributeReader {
 
     @Override
     public void close() throws IOException {
-        for (FieldIndexedDbaseFileReader dbaseReader : dbaseReaderList) {
-            if (dbaseReaderList != null) {
-                try { dbaseReader.close(); } catch (IOException ignore) {}
-            }
-        }
+		dbaseReaderList.stream().filter((dbaseReader) -> (dbaseReaderList != null)).forEach((dbaseReader) -> {
+			try { dbaseReader.close(); } catch (IOException ignore) {}
+		});
     }
 
     @Override

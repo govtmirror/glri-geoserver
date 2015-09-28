@@ -33,8 +33,7 @@ public class DbaseShapefileAttributeJoiningReader  extends ShapefileAttributeRea
         dbaseFieldIndices = new int[attributeCount];
         for (int attributeIndex = 0; attributeIndex < attributeCount; ++attributeIndex) {
             Object o = getAttributeType(attributeIndex).getUserData().get(DbaseShapefileDataStore.KEY_FIELD_INDEX);
-            dbaseFieldIndices[attributeIndex] = o instanceof Integer ?
-                    ((Integer)o).intValue() : -1;
+            dbaseFieldIndices[attributeIndex] = o instanceof Integer ? (Integer) o : -1;
         }
     }
 
@@ -91,7 +90,7 @@ public class DbaseShapefileAttributeJoiningReader  extends ShapefileAttributeRea
 
     private static List<AttributeDescriptor> hack(ShapefileAttributeReader delegate) {
         int attributeCount = delegate.getAttributeCount();
-        List<AttributeDescriptor> descriptors = new ArrayList<AttributeDescriptor>(delegate.getAttributeCount());
+        List<AttributeDescriptor> descriptors = new ArrayList<>(delegate.getAttributeCount());
         for (int attributeIndex = 0; attributeIndex < attributeCount; ++attributeIndex) {
             descriptors.add(delegate.getAttributeType(attributeIndex));
         }
