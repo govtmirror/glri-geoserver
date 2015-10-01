@@ -24,6 +24,8 @@ public class FieldIndexedDbaseFileReader extends DbaseFileReader {
         
     private static final Logger LOGGER = org.geotools.util.logging.Logging.getLogger(FieldIndexedDbaseFileReader.class);
 	
+	private static final Boolean USE_MEMMAPPED_BUFFER = false;
+	
 	/**
 	 * Index of the join column values to the unique row they occur on.
 	 * The rows are ONE based.
@@ -31,7 +33,7 @@ public class FieldIndexedDbaseFileReader extends DbaseFileReader {
 	Map<Object, Integer> indexMap = new HashMap<>();
     
     public FieldIndexedDbaseFileReader(FileChannel fileChannel) throws IOException {
-        super(fileChannel, true, ShapefileDataStore.DEFAULT_STRING_CHARSET);
+        super(fileChannel, USE_MEMMAPPED_BUFFER, ShapefileDataStore.DEFAULT_STRING_CHARSET);
     }
     
     public FieldIndexedDbaseFileReader(FileChannel fileChannel, boolean useMemoryMappedBuffer) throws IOException {

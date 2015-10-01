@@ -45,10 +45,12 @@ public class DbaseShapefileDataStore extends ShapefileDataStore {
     private Set<String> shapefileAttributeNames;
     private Set<String> joinedDBaseAttributeNames;
     private Map<Object, Integer> fieldIndexMap;
-	private static final Charset UTF8 = Charset.forName("UTF-8");
+	private static final Charset UTF8 = Charset.forName("UTF-8"); 
+	private static final Boolean USE_MEMMAPPED_BUFFER = false;
+	private static final Boolean CACHE_MEMMAP = false;
 
     public DbaseShapefileDataStore(URI namespaceURI, URL dbaseFileURL, URL shapefileURL, String shapefileJoinAttributeName) throws MalformedURLException, IOException {
-        super(shapefileURL, namespaceURI, true, true, UTF8);
+        super(shapefileURL, namespaceURI, USE_MEMMAPPED_BUFFER, CACHE_MEMMAP, UTF8);
         
         this.dbaseFileURL = dbaseFileURL;
         
