@@ -48,8 +48,8 @@ public class DbaseDirectoryShapefileDataStore extends ShapefileDataStore {
     private Set<String> shapefileAttributeNames;
     private Set<String> joinedDBaseAttributeNames;
 	private static final Charset UTF8 = Charset.forName("UTF-8");
-	private static final Boolean USE_MEMMAPPED_BUFFER = false;
-	private static final Boolean CACHE_MEMMAP = false;
+	private static final Boolean USE_MEMMAPPED_BUFFER = true;
+	private static final Boolean CACHE_MEMMAP = true;
     
     private final Map<File, Map<Object, Integer>> fileFieldIndexMap = new HashMap<>();
     

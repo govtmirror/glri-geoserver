@@ -24,7 +24,7 @@ public class FieldIndexedDbaseFileReader extends DbaseFileReader {
         
     private static final Logger LOGGER = org.geotools.util.logging.Logging.getLogger(FieldIndexedDbaseFileReader.class);
 	
-	private static final Boolean USE_MEMMAPPED_BUFFER = false;
+	private static final Boolean USE_MEMMAPPED_BUFFER = true;
 	
 	/**
 	 * Index of the join column values to the unique row they occur on.
