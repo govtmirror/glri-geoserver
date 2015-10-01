@@ -4,6 +4,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import org.geotools.data.shapefile.ShapefileAttributeReader;
 import org.geotools.data.shapefile.dbf.FieldIndexedDbaseFileReader;
 import org.geotools.renderer.ScreenMap;
@@ -15,7 +16,7 @@ import org.opengis.feature.type.AttributeDescriptor;
  * @author tkunicki
  */
 public class DbaseShapefileAttributeJoiningReader  extends ShapefileAttributeReader {
-    
+    private static final Logger LOGGER = org.geotools.util.logging.Logging.getLogger(DbaseShapefileAttributeJoiningReader.class);
     private final ShapefileAttributeReader delegate;
     private final int shapefileJoinAttributeIndex;
     private final FieldIndexedDbaseFileReader dbaseReader;
@@ -55,12 +56,19 @@ public class DbaseShapefileAttributeJoiningReader  extends ShapefileAttributeRea
 
     @Override
     public void next() throws IOException {
+		LOGGER.finest("Calling delegate.next()");
         delegate.next();
-        if (dbaseReader.setCurrentRecordByValue(delegate.read(shapefileJoinAttributeIndex))) {
+		LOGGER.finest("Calling delegate.read()");
+		Object record = delegate.read(shapefileJoinAttributeIndex);
+		LOGGER.finest("Calling dbaseReader.setCurrentRecordByValue");
+        if (dbaseReader.setCurrentRecordByValue(record)) {
+			LOGGER.finest("Calling dbaseReader.readRow");
             dbaseRow = dbaseReader.readRow();
         } else {
+			LOGGER.finest("dbaseRow = null");
             dbaseRow = null;
         }
+		LOGGER.finest("dbaseReader.next() completed");
     }
 
     @Override
